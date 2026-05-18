@@ -1,16 +1,12 @@
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace RestaurantOrderingSystem.Forms
 {
     partial class SplashForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,22 +16,55 @@ namespace RestaurantOrderingSystem.Forms
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        private Label lblTitle;
+        private Label lblSubtitle;
+        private Label lblVersion;
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 350);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+
+            this.lblTitle = new Label
+            {
+                Text = "Restaurant Ordering System",
+                Font = new Font("Segoe UI", 22F, FontStyle.Bold),
+                ForeColor = Color.White,
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Top,
+                Height = 120
+            };
+
+            this.lblSubtitle = new Label
+            {
+                Text = "Loading…",
+                Font = new Font("Segoe UI", 12F, FontStyle.Regular),
+                ForeColor = Color.Gainsboro,
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Fill
+            };
+
+            this.lblVersion = new Label
+            {
+                Text = "v1.0.0  •  Phase 2 build",
+                Font = new Font("Segoe UI", 9F),
+                ForeColor = Color.LightGray,
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Bottom,
+                Height = 32
+            };
+
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.BackColor = Color.FromArgb(28, 33, 48);
+            this.ClientSize = new Size(600, 350);
+            this.Controls.Add(this.lblSubtitle);
+            this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.lblVersion);
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.Text = "Restaurant Ordering System";
         }
-
-        #endregion
     }
 }
