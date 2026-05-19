@@ -37,6 +37,6 @@ namespace RestaurantOrderingSystem.Services
         }
 
         public void Update(MenuItem item) { _repo.Update(item); }
-        public void Delete(string id)     { _repo.Delete(id); }
+        public void Delete(string id) { _repo.Delete(id); }
     }
 }

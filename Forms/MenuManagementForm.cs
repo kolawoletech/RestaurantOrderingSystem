@@ -16,18 +16,18 @@ namespace RestaurantOrderingSystem.Forms
     {
         private readonly ServiceContainer _ctx;
 
-        private DataGridView    grid;
-        private TextBox         txtId;
-        private TextBox         txtName;
-        private ComboBox        cmbCategory;
-        private NumericUpDown   numPrice;
-        private CheckBox        chkAvailable;
-        private CheckBox        chkVegetarian;
-        private NumericUpDown   numVolume;
-        private Label           lblVegetarian;
-        private Label           lblVolume;
-        private Button          btnAdd, btnUpdate, btnDelete, btnClear;
-        private TextBox         txtSearch;
+        private DataGridView grid;
+        private TextBox txtId;
+        private TextBox txtName;
+        private ComboBox cmbCategory;
+        private NumericUpDown numPrice;
+        private CheckBox chkAvailable;
+        private CheckBox chkVegetarian;
+        private NumericUpDown numVolume;
+        private Label lblVegetarian;
+        private Label lblVolume;
+        private Button btnAdd, btnUpdate, btnDelete, btnClear;
+        private TextBox txtSearch;
 
         public MenuManagementForm(ServiceContainer ctx)
         {
@@ -71,13 +71,13 @@ namespace RestaurantOrderingSystem.Forms
                 RowHeadersVisible = false,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
             };
-            grid.Columns.Add("MealId",    "ID");
-            grid.Columns.Add("MealName",  "Name");
-            grid.Columns.Add("Type",      "Type");
-            grid.Columns.Add("Category",  "Category");
-            grid.Columns.Add("Price",     "Price");
+            grid.Columns.Add("MealId", "ID");
+            grid.Columns.Add("MealName", "Name");
+            grid.Columns.Add("Type", "Type");
+            grid.Columns.Add("Category", "Category");
+            grid.Columns.Add("Price", "Price");
             grid.Columns.Add("Available", "Available");
-            grid.Columns.Add("Extra",     "Extra");
+            grid.Columns.Add("Extra", "Extra");
             grid.SelectionChanged += Grid_SelectionChanged;
 
             // ---- Form panel ----
@@ -91,11 +91,11 @@ namespace RestaurantOrderingSystem.Forms
             int col1 = 20, col2 = 240, col3 = 460, col4 = 680;
             int rowY1 = 20, rowY2 = 80;
 
-            formPanel.Controls.Add(new Label { Text = "Meal ID",  Bounds = new Rectangle(col1, rowY1, 200, 18), ForeColor = Color.Gray });
+            formPanel.Controls.Add(new Label { Text = "Meal ID", Bounds = new Rectangle(col1, rowY1, 200, 18), ForeColor = Color.Gray });
             txtId = new TextBox { Bounds = new Rectangle(col1, rowY1 + 20, 200, 28) };
             formPanel.Controls.Add(txtId);
 
-            formPanel.Controls.Add(new Label { Text = "Name",     Bounds = new Rectangle(col2, rowY1, 200, 18), ForeColor = Color.Gray });
+            formPanel.Controls.Add(new Label { Text = "Name", Bounds = new Rectangle(col2, rowY1, 200, 18), ForeColor = Color.Gray });
             txtName = new TextBox { Bounds = new Rectangle(col2, rowY1 + 20, 200, 28) };
             formPanel.Controls.Add(txtName);
 
@@ -114,7 +114,10 @@ namespace RestaurantOrderingSystem.Forms
             numPrice = new NumericUpDown
             {
                 Bounds = new Rectangle(col4, rowY1 + 20, 200, 28),
-                DecimalPlaces = 2, Increment = 1m, Maximum = 100000m, Minimum = 0m
+                DecimalPlaces = 2,
+                Increment = 1m,
+                Maximum = 100000m,
+                Minimum = 0m
             };
             formPanel.Controls.Add(numPrice);
 
@@ -138,20 +141,22 @@ namespace RestaurantOrderingSystem.Forms
             numVolume = new NumericUpDown
             {
                 Bounds = new Rectangle(col3, rowY2, 200, 28),
-                Maximum = 10000, Minimum = 0, Increment = 50
+                Maximum = 10000,
+                Minimum = 0,
+                Increment = 50
             };
             formPanel.Controls.Add(lblVolume);
             formPanel.Controls.Add(numVolume);
 
-            btnAdd    = MakeButton("Add",    col4,        rowY2,   90, Color.FromArgb(46, 110, 234), Color.White);
-            btnUpdate = MakeButton("Update", col4 + 100,  rowY2,   90, Color.White, Color.FromArgb(46, 110, 234));
-            btnDelete = MakeButton("Delete", col1,        rowY2 + 36, 90, Color.White, Color.Firebrick);
-            btnClear  = MakeButton("Clear",  col1 + 100,  rowY2 + 36, 90, Color.White, Color.DimGray);
+            btnAdd = MakeButton("Add", col4, rowY2, 90, Color.FromArgb(46, 110, 234), Color.White);
+            btnUpdate = MakeButton("Update", col4 + 100, rowY2, 90, Color.White, Color.FromArgb(46, 110, 234));
+            btnDelete = MakeButton("Delete", col1, rowY2 + 36, 90, Color.White, Color.Firebrick);
+            btnClear = MakeButton("Clear", col1 + 100, rowY2 + 36, 90, Color.White, Color.DimGray);
 
-            btnAdd.Click    += BtnAdd_Click;
+            btnAdd.Click += BtnAdd_Click;
             btnUpdate.Click += BtnUpdate_Click;
             btnDelete.Click += BtnDelete_Click;
-            btnClear.Click  += (s, e) => ClearForm();
+            btnClear.Click += (s, e) => ClearForm();
 
             formPanel.Controls.Add(btnAdd);
             formPanel.Controls.Add(btnUpdate);
@@ -182,8 +187,8 @@ namespace RestaurantOrderingSystem.Forms
         {
             var isDrink = (MealCategory)cmbCategory.SelectedItem == MealCategory.Drink;
             chkVegetarian.Visible = !isDrink;
-            numVolume.Visible     = isDrink;
-            lblVolume.Visible     = isDrink;
+            numVolume.Visible = isDrink;
+            lblVolume.Visible = isDrink;
         }
 
         private void RefreshGrid()
@@ -195,7 +200,7 @@ namespace RestaurantOrderingSystem.Forms
             grid.Rows.Clear();
             foreach (var item in items)
             {
-                string type  = item is FoodItem ? "Food" : "Drink";
+                string type = item is FoodItem ? "Food" : "Drink";
                 string extra = item is FoodItem food
                     ? (food.IsVegetarian ? "Vegetarian" : "—")
                     : item is DrinkItem drink ? drink.VolumeMl + " ml" : "—";

@@ -13,7 +13,7 @@ namespace RestaurantOrderingSystem.Data
         {
             // Seeded demo accounts. In a real system these would come from a
             // secured database with hashed passwords.
-            _employees.Add(new Admin("E001",   "Alice Admin",   "admin",   "admin123"));
+            _employees.Add(new Admin("E001", "Alice Admin", "admin", "admin123"));
             _employees.Add(new Cashier("E002", "Charlie Cashier", "cashier", "cashier123"));
         }
 

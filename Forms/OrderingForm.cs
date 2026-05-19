@@ -18,11 +18,11 @@ namespace RestaurantOrderingSystem.Forms
         private readonly ServiceContainer _ctx;
         private Order _currentOrder;
 
-        private ComboBox      cmbMeal;
+        private ComboBox cmbMeal;
         private NumericUpDown numQty;
-        private Button        btnAdd, btnRemove, btnSubmit, btnNew;
-        private DataGridView  gridOrder;
-        private Label         lblSubtotal, lblTax, lblTotal;
+        private Button btnAdd, btnRemove, btnSubmit, btnNew;
+        private DataGridView gridOrder;
+        private Label lblSubtotal, lblTax, lblTotal;
 
         public OrderingForm(ServiceContainer ctx)
         {
@@ -66,7 +66,9 @@ namespace RestaurantOrderingSystem.Forms
             numQty = new NumericUpDown
             {
                 Bounds = new Rectangle(460, 80, 100, 28),
-                Minimum = 1, Maximum = 99, Value = 1
+                Minimum = 1,
+                Maximum = 99,
+                Value = 1
             };
 
             btnAdd = MakeButton("Add to order", 580, 80, 140, Color.FromArgb(46, 110, 234), Color.White);
@@ -90,16 +92,16 @@ namespace RestaurantOrderingSystem.Forms
                 RowHeadersVisible = false,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
             };
-            gridOrder.Columns.Add("MealId",   "ID");
+            gridOrder.Columns.Add("MealId", "ID");
             gridOrder.Columns.Add("MealName", "Item");
-            gridOrder.Columns.Add("Qty",      "Qty");
-            gridOrder.Columns.Add("Price",    "Unit price");
-            gridOrder.Columns.Add("Total",    "Line total");
+            gridOrder.Columns.Add("Qty", "Qty");
+            gridOrder.Columns.Add("Price", "Unit price");
+            gridOrder.Columns.Add("Total", "Line total");
 
             // ----- totals + actions -----
             lblSubtotal = TotalLabel("Subtotal: R 0.00", 20, 425);
-            lblTax      = TotalLabel("VAT (15%): R 0.00", 20, 450);
-            lblTotal    = TotalLabel("TOTAL: R 0.00",   20, 478);
+            lblTax = TotalLabel("VAT (15%): R 0.00", 20, 450);
+            lblTotal = TotalLabel("TOTAL: R 0.00", 20, 478);
             lblTotal.Font = new Font("Segoe UI Semibold", 13F);
             lblTotal.ForeColor = Color.FromArgb(28, 33, 48);
 
@@ -199,8 +201,8 @@ namespace RestaurantOrderingSystem.Forms
                     line.LineTotal.ToString("0.00"));
             }
             lblSubtotal.Text = "Subtotal: R " + _currentOrder.Subtotal.ToString("0.00");
-            lblTax.Text      = "VAT (15%): R " + _currentOrder.Tax.ToString("0.00");
-            lblTotal.Text    = "TOTAL: R " + _currentOrder.Total.ToString("0.00");
+            lblTax.Text = "VAT (15%): R " + _currentOrder.Tax.ToString("0.00");
+            lblTotal.Text = "TOTAL: R " + _currentOrder.Total.ToString("0.00");
         }
 
         // Small helper so we can show DisplayLabel in the combo without overriding ToString on the model.

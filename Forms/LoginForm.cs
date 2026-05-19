@@ -16,10 +16,10 @@ namespace RestaurantOrderingSystem.Forms
 
         private TextBox txtUsername;
         private TextBox txtPassword;
-        private Button  btnLogin;
-        private Button  btnExit;
-        private Label   lblStatus;
-        private Label   lblHint;
+        private Button btnLogin;
+        private Button btnExit;
+        private Label lblStatus;
+        private Label lblHint;
 
         public LoginForm(ServiceContainer ctx)
         {

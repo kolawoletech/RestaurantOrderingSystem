@@ -31,13 +31,13 @@ namespace RestaurantOrderingSystem.Forms
             var menu = new MenuStrip();
             var fileMenu = new ToolStripMenuItem("&File");
             var miSignOut = new ToolStripMenuItem("Sign &out", null, (s, e) => SignOut());
-            var miExit    = new ToolStripMenuItem("E&xit",      null, (s, e) => Application.Exit());
+            var miExit = new ToolStripMenuItem("E&xit", null, (s, e) => Application.Exit());
             fileMenu.DropDownItems.AddRange(new ToolStripItem[] { miSignOut, new ToolStripSeparator(), miExit });
 
             var goMenu = new ToolStripMenuItem("&Go");
             if (_ctx.CurrentUser is Admin)
-                goMenu.DropDownItems.Add(new ToolStripMenuItem("&Menu management",  null, (s, e) => OpenMenuManagement()));
-            goMenu.DropDownItems.Add(new ToolStripMenuItem("&New order",            null, (s, e) => OpenOrdering()));
+                goMenu.DropDownItems.Add(new ToolStripMenuItem("&Menu management", null, (s, e) => OpenMenuManagement()));
+            goMenu.DropDownItems.Add(new ToolStripMenuItem("&New order", null, (s, e) => OpenOrdering()));
 
             var helpMenu = new ToolStripMenuItem("&Help");
             helpMenu.DropDownItems.Add(new ToolStripMenuItem("&About", null, (s, e) =>
@@ -132,10 +132,10 @@ namespace RestaurantOrderingSystem.Forms
             };
 
             void invoke(object s, EventArgs e) { onClick(); }
-            tile.Click  += invoke;
-            bar.Click   += invoke;
+            tile.Click += invoke;
+            bar.Click += invoke;
             lblTitle.Click += invoke;
-            lblDesc.Click  += invoke;
+            lblDesc.Click += invoke;
 
             tile.Controls.Add(lblDesc);
             tile.Controls.Add(lblTitle);
