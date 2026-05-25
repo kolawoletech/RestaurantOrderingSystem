@@ -19,14 +19,15 @@ namespace RestaurantOrderingSystem.Data
 
         private void Seed()
         {
-            _items.Add(new FoodItem("F001", "Margherita Pizza", MealCategory.Main, 89.99m, true, true));
-            _items.Add(new FoodItem("F002", "Beef Burger", MealCategory.Main, 75.50m, true, false));
-            _items.Add(new FoodItem("F003", "Caesar Salad", MealCategory.Starter, 55.00m, true, true));
-            _items.Add(new FoodItem("F004", "Chocolate Cake", MealCategory.Dessert, 42.00m, true, true));
-            _items.Add(new FoodItem("F005", "French Fries", MealCategory.SideDish, 28.00m, true, true));
-            _items.Add(new DrinkItem("D001", "Coca-Cola", 18.50m, true, 330));
-            _items.Add(new DrinkItem("D002", "Sparkling Water", 22.00m, true, 500));
-            _items.Add(new DrinkItem("D003", "Orange Juice", 30.00m, true, 250));
+            // Seed sensible starting stock and low-stock thresholds.
+            _items.Add(new FoodItem("F001", "Margherita Pizza", MealCategory.Main, 89.99m, true, true, stockQuantity: 20, lowStockThreshold: 5));
+            _items.Add(new FoodItem("F002", "Beef Burger", MealCategory.Main, 75.50m, true, false, stockQuantity: 25, lowStockThreshold: 5));
+            _items.Add(new FoodItem("F003", "Caesar Salad", MealCategory.Starter, 55.00m, true, true, stockQuantity: 15, lowStockThreshold: 3));
+            _items.Add(new FoodItem("F004", "Chocolate Cake", MealCategory.Dessert, 42.00m, true, true, stockQuantity: 10, lowStockThreshold: 3));
+            _items.Add(new FoodItem("F005", "French Fries", MealCategory.SideDish, 28.00m, true, true, stockQuantity: 40, lowStockThreshold: 8));
+            _items.Add(new DrinkItem("D001", "Coca-Cola", 18.50m, true, 330, stockQuantity: 50, lowStockThreshold: 10));
+            _items.Add(new DrinkItem("D002", "Sparkling Water", 22.00m, true, 500, stockQuantity: 30, lowStockThreshold: 8));
+            _items.Add(new DrinkItem("D003", "Orange Juice", 30.00m, true, 250, stockQuantity: 20, lowStockThreshold: 5));
         }
 
         public IReadOnlyList<MenuItem> GetAll() { return _items.AsReadOnly(); }

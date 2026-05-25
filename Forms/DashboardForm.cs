@@ -38,6 +38,7 @@ namespace RestaurantOrderingSystem.Forms
             if (_ctx.CurrentUser is Admin)
                 goMenu.DropDownItems.Add(new ToolStripMenuItem("&Menu management", null, (s, e) => OpenMenuManagement()));
             goMenu.DropDownItems.Add(new ToolStripMenuItem("&New order", null, (s, e) => OpenOrdering()));
+            goMenu.DropDownItems.Add(new ToolStripMenuItem("&Kitchen queue", null, (s, e) => OpenKitchen()));
 
             var helpMenu = new ToolStripMenuItem("&Help");
             helpMenu.DropDownItems.Add(new ToolStripMenuItem("&About", null, (s, e) =>
@@ -93,6 +94,11 @@ namespace RestaurantOrderingSystem.Forms
                 "Build a customer order and print the receipt.",
                 Color.FromArgb(20, 161, 110),
                 OpenOrdering));
+
+            content.Controls.Add(BuildTile("Kitchen queue",
+                "Track order status: Pending → Preparing → Ready → Completed.",
+                Color.FromArgb(240, 150, 30),
+                OpenKitchen));
 
             content.Controls.Add(BuildTile("Sign out",
                 "End the current session and return to login.",
@@ -154,6 +160,14 @@ namespace RestaurantOrderingSystem.Forms
         private void OpenOrdering()
         {
             using (var f = new OrderingForm(_ctx))
+            {
+                f.ShowDialog(this);
+            }
+        }
+
+        private void OpenKitchen()
+        {
+            using (var f = new KitchenForm(_ctx))
             {
                 f.ShowDialog(this);
             }

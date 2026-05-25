@@ -4,8 +4,9 @@ namespace RestaurantOrderingSystem.Models
     {
         public int VolumeMl { get; set; }
 
-        public DrinkItem(string mealId, string mealName, decimal price, bool isAvailable, int volumeMl)
-            : base(mealId, mealName, MealCategory.Drink, price, isAvailable)
+        public DrinkItem(string mealId, string mealName, decimal price, bool isAvailable, int volumeMl,
+                         int stockQuantity = 0, int lowStockThreshold = 5)
+            : base(mealId, mealName, MealCategory.Drink, price, isAvailable, stockQuantity, lowStockThreshold)
         {
             VolumeMl = volumeMl;
         }

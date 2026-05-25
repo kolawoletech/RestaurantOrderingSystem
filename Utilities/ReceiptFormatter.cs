@@ -17,6 +17,7 @@ namespace RestaurantOrderingSystem.Utilities
             sb.AppendLine("Order #:  " + order.OrderNumber);
             sb.AppendLine("Date:     " + order.CreatedAt.ToString("yyyy-MM-dd HH:mm"));
             sb.AppendLine("Cashier:  " + order.CashierUsername);
+            sb.AppendLine("Status:   " + order.Status);
             sb.AppendLine("------------------------------------------------");
             sb.AppendLine(string.Format("{0,-22}{1,4}{2,10}{3,12}", "Item", "Qty", "Price", "Total"));
             sb.AppendLine("------------------------------------------------");

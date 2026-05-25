@@ -24,6 +24,8 @@ namespace RestaurantOrderingSystem.Forms
         private CheckBox chkAvailable;
         private CheckBox chkVegetarian;
         private NumericUpDown numVolume;
+        private NumericUpDown numStock;
+        private NumericUpDown numLowThreshold;
         private Label lblVegetarian;
         private Label lblVolume;
         private Button btnAdd, btnUpdate, btnDelete, btnClear;
@@ -77,6 +79,7 @@ namespace RestaurantOrderingSystem.Forms
             grid.Columns.Add("Category", "Category");
             grid.Columns.Add("Price", "Price");
             grid.Columns.Add("Available", "Available");
+            grid.Columns.Add("Stock", "Stock");
             grid.Columns.Add("Extra", "Extra");
             grid.SelectionChanged += Grid_SelectionChanged;
 
@@ -150,6 +153,28 @@ namespace RestaurantOrderingSystem.Forms
 
             btnAdd = MakeButton("Add", col4, rowY2, 90, Color.FromArgb(46, 110, 234), Color.White);
             btnUpdate = MakeButton("Update", col4 + 100, rowY2, 90, Color.White, Color.FromArgb(46, 110, 234));
+            // Stock & low-stock threshold inputs.
+            formPanel.Controls.Add(new Label { Text = "Stock qty", Bounds = new Rectangle(col2, rowY2 + 36, 200, 18), ForeColor = Color.Gray });
+            numStock = new NumericUpDown
+            {
+                Bounds = new Rectangle(col2, rowY2 + 56, 200, 28),
+                Maximum = 100000,
+                Minimum = 0,
+                Increment = 1
+            };
+            formPanel.Controls.Add(numStock);
+
+            formPanel.Controls.Add(new Label { Text = "Low-stock threshold", Bounds = new Rectangle(col3, rowY2 + 36, 200, 18), ForeColor = Color.Gray });
+            numLowThreshold = new NumericUpDown
+            {
+                Bounds = new Rectangle(col3, rowY2 + 56, 200, 28),
+                Maximum = 10000,
+                Minimum = 0,
+                Increment = 1,
+                Value = 5
+            };
+            formPanel.Controls.Add(numLowThreshold);
+
             btnDelete = MakeButton("Delete", col1, rowY2 + 36, 90, Color.White, Color.Firebrick);
             btnClear = MakeButton("Clear", col1 + 100, rowY2 + 36, 90, Color.White, Color.DimGray);
 
@@ -205,8 +230,17 @@ namespace RestaurantOrderingSystem.Forms
                     ? (food.IsVegetarian ? "Vegetarian" : "—")
                     : item is DrinkItem drink ? drink.VolumeMl + " ml" : "—";
 
-                grid.Rows.Add(item.MealId, item.MealName, type, item.Category, item.Price.ToString("0.00"),
-                              item.IsAvailable ? "Yes" : "No", extra);
+                string stockText = item.IsLowStock
+                    ? string.Format("{0} ⚠ low", item.StockQuantity)
+                    : item.StockQuantity.ToString();
+
+                int row = grid.Rows.Add(item.MealId, item.MealName, type, item.Category, item.Price.ToString("0.00"),
+                              item.IsAvailable ? "Yes" : "No", stockText, extra);
+
+                if (item.StockQuantity == 0)
+                    grid.Rows[row].DefaultCellStyle.BackColor = Color.FromArgb(250, 224, 224);
+                else if (item.IsLowStock)
+                    grid.Rows[row].DefaultCellStyle.BackColor = Color.FromArgb(255, 248, 220);
             }
         }
 
@@ -223,6 +257,8 @@ namespace RestaurantOrderingSystem.Forms
             cmbCategory.SelectedItem = item.Category;
             numPrice.Value = item.Price;
             chkAvailable.Checked = item.IsAvailable;
+            numStock.Value = item.StockQuantity;
+            numLowThreshold.Value = item.LowStockThreshold;
 
             if (item is FoodItem food)
             {
@@ -247,6 +283,8 @@ namespace RestaurantOrderingSystem.Forms
             chkAvailable.Checked = true;
             chkVegetarian.Checked = false;
             numVolume.Value = 0;
+            numStock.Value = 0;
+            numLowThreshold.Value = 5;
             grid.ClearSelection();
             UpdateExtraFields();
         }
@@ -260,9 +298,11 @@ namespace RestaurantOrderingSystem.Forms
 
                 var cat = (MealCategory)cmbCategory.SelectedItem;
                 if (cat == MealCategory.Drink)
-                    _ctx.MenuService.AddDrink(txtId.Text, txtName.Text, numPrice.Value, chkAvailable.Checked, (int)numVolume.Value);
+                    _ctx.MenuService.AddDrink(txtId.Text, txtName.Text, numPrice.Value, chkAvailable.Checked, (int)numVolume.Value,
+                                              (int)numStock.Value, (int)numLowThreshold.Value);
                 else
-                    _ctx.MenuService.AddFood(txtId.Text, txtName.Text, cat, numPrice.Value, chkAvailable.Checked, chkVegetarian.Checked);
+                    _ctx.MenuService.AddFood(txtId.Text, txtName.Text, cat, numPrice.Value, chkAvailable.Checked, chkVegetarian.Checked,
+                                             (int)numStock.Value, (int)numLowThreshold.Value);
 
                 RefreshGrid();
                 ClearForm();
@@ -282,8 +322,10 @@ namespace RestaurantOrderingSystem.Forms
 
                 var cat = (MealCategory)cmbCategory.SelectedItem;
                 MenuItem replacement = cat == MealCategory.Drink
-                    ? (MenuItem)new DrinkItem(txtId.Text, txtName.Text, numPrice.Value, chkAvailable.Checked, (int)numVolume.Value)
-                    : new FoodItem(txtId.Text, txtName.Text, cat, numPrice.Value, chkAvailable.Checked, chkVegetarian.Checked);
+                    ? (MenuItem)new DrinkItem(txtId.Text, txtName.Text, numPrice.Value, chkAvailable.Checked, (int)numVolume.Value,
+                                              (int)numStock.Value, (int)numLowThreshold.Value)
+                    : new FoodItem(txtId.Text, txtName.Text, cat, numPrice.Value, chkAvailable.Checked, chkVegetarian.Checked,
+                                   (int)numStock.Value, (int)numLowThreshold.Value);
 
                 _ctx.MenuService.Update(replacement);
                 RefreshGrid();

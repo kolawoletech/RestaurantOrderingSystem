@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using RestaurantOrderingSystem.Exceptions;   // LESSON: Lesson 12 — using directive imports the Exceptions namespace
 using RestaurantOrderingSystem.Models;
 using RestaurantOrderingSystem.Services;
 
@@ -109,22 +110,29 @@ namespace RestaurantOrderingSystem.Forms
         private void BtnLogin_Click(object sender, EventArgs e)
         {
             lblStatus.Text = string.Empty;
+            // LESSON: Lesson 11 (§2.4.1) — order catch clauses from MOST
+            // SPECIFIC to LEAST specific. InvalidLoginException is a subclass
+            // of Exception, so it must come first; otherwise the general
+            // catch (Exception) would swallow it.
             try
             {
                 var user = _ctx.Auth.Authenticate(txtUsername.Text, txtPassword.Text);
-                if (user == null)
-                {
-                    lblStatus.Text = "Invalid username or password.";
-                    return;
-                }
                 _ctx.CurrentUser = user;
                 AuthenticatedUser = user;
                 DialogResult = DialogResult.OK;
                 Close();
             }
+            catch (InvalidLoginException ex)
+            {
+                // We know exactly what went wrong — bad credentials.
+                lblStatus.Text = ex.Message;
+                txtPassword.Clear();
+                txtPassword.Focus();
+            }
             catch (Exception ex)
             {
-                lblStatus.Text = ex.Message;
+                // Anything else (e.g. a future repository error) lands here.
+                lblStatus.Text = "Unexpected error: " + ex.Message;
             }
         }
     }

@@ -2,10 +2,15 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using RestaurantOrderingSystem.Exceptions;
 using RestaurantOrderingSystem.Models;
 using RestaurantOrderingSystem.Services;
 using RestaurantOrderingSystem.Utilities;
-// Disambiguate: System.Windows.Forms also defines a MenuItem class.
+// LESSON: Lesson 12 (§2.5.2) — using ALIAS.
+// Both System.Windows.Forms and RestaurantOrderingSystem.Models define
+// a "MenuItem" type. We alias the model one to the short name MenuItem
+// so the rest of the file can stay readable without colliding with the
+// WinForms type. (Same pattern as the PDF's "using classInJoburg = ...".)
 using MenuItem = RestaurantOrderingSystem.Models.MenuItem;
 
 namespace RestaurantOrderingSystem.Forms
@@ -144,18 +149,43 @@ namespace RestaurantOrderingSystem.Forms
 
         private void BtnAdd_Click(object sender, EventArgs e)
         {
+            // LESSON: Lesson 11 (§2.4.1) — specific catches before general.
+            // Each branch shows a different message, so the user gets
+            // contextual feedback instead of one generic "error" popup.
             try
             {
                 if (cmbMeal.SelectedItem is MenuItemBox box)
                 {
                     _currentOrder.AddItem(box.Item, (int)numQty.Value);
                     RefreshOrder();
+                    // Re-bind the combo so updated stock counts show.
+                    RefreshMealList();
                 }
+            }
+            catch (OutOfStockException ex)
+            {
+                MessageBox.Show(this,
+                    ex.Message + "\n\nAsk the kitchen to restock or pick another item.",
+                    "Out of stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (InvalidOrderStateException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Order locked",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Cannot add item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, ex.Message, "Cannot add item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void RefreshMealList()
+        {
+            cmbMeal.Items.Clear();
+            foreach (var item in _ctx.MenuService.GetAvailable())
+                cmbMeal.Items.Add(new MenuItemBox(item));
+            if (cmbMeal.Items.Count > 0) cmbMeal.SelectedIndex = 0;
         }
 
         private void BtnRemove_Click(object sender, EventArgs e)
@@ -169,6 +199,12 @@ namespace RestaurantOrderingSystem.Forms
 
         private void BtnSubmit_Click(object sender, EventArgs e)
         {
+            // LESSON: Lesson 11 (§2.4.2) — finally always runs.
+            // We disable the Submit button while the work is in flight so
+            // a double-click can't submit twice. Whether Submit succeeds,
+            // throws InvalidOrderStateException, or throws something else
+            // entirely, the finally block restores the button.
+            btnSubmit.Enabled = false;
             try
             {
                 _ctx.OrderService.Submit(_currentOrder);
@@ -181,10 +217,21 @@ namespace RestaurantOrderingSystem.Forms
 
                 _currentOrder = _ctx.OrderService.CreateOrder(_ctx.CurrentUser.Username);
                 RefreshOrder();
+                RefreshMealList();
+            }
+            catch (InvalidOrderStateException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Cannot submit",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Cannot submit", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, ex.Message, "Cannot submit",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            finally
+            {
+                btnSubmit.Enabled = true;
             }
         }
 
@@ -212,7 +259,8 @@ namespace RestaurantOrderingSystem.Forms
             public MenuItemBox(MenuItem item) { Item = item; }
             public override string ToString()
             {
-                return string.Format("{0}  —  R {1:0.00}  ({2})", Item.DisplayLabel, Item.Price, Item.Category);
+                return string.Format("{0}  —  R {1:0.00}  ({2}, stock: {3})",
+                    Item.DisplayLabel, Item.Price, Item.Category, Item.StockQuantity);
             }
         }
     }

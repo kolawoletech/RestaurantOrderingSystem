@@ -4,8 +4,9 @@ namespace RestaurantOrderingSystem.Models
     {
         public bool IsVegetarian { get; set; }
 
-        public FoodItem(string mealId, string mealName, MealCategory category, decimal price, bool isAvailable, bool isVegetarian)
-            : base(mealId, mealName, category, price, isAvailable)
+        public FoodItem(string mealId, string mealName, MealCategory category, decimal price, bool isAvailable,
+                        bool isVegetarian, int stockQuantity = 0, int lowStockThreshold = 5)
+            : base(mealId, mealName, category, price, isAvailable, stockQuantity, lowStockThreshold)
         {
             IsVegetarian = isVegetarian;
         }

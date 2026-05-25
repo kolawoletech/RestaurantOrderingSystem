@@ -67,6 +67,9 @@
     <Compile Include="Forms\ReceiptPreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\KitchenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Admin.cs" />
@@ -77,6 +80,10 @@
     <Compile Include="Models\DrinkItem.cs" />
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderStatus.cs" />
+    <Compile Include="Exceptions\OutOfStockException.cs" />
+    <Compile Include="Exceptions\InvalidOrderStateException.cs" />
+    <Compile Include="Exceptions\InvalidLoginException.cs" />
     <Compile Include="Interfaces\IOrderable.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IAuthService.cs" />
